@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">GPS Logger</string>
+    <string name="title_item">GPS Data Item</string>
+
+    <string name="id_format">Id: %d</string>
+    <string name="time_format">Time: %d</string>
+    <string name="latitude_format">Latitude: %f</string>
+    <string name="longitude_format">Longitude: %f</string>
+    <string name="provider_format">Provider: %s</string>
+    <string name="accuracy_format">Accuracy: %f</string>
+    <string name="bearing_format">Bearing: %f</string>
+    <string name="speed_format">Speed: %f</string>
+    <string name="altitude_format">Altitude: %f</string>
+</resources>
