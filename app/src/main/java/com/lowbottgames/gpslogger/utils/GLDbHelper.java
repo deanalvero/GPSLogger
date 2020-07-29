@@ -7,13 +7,9 @@ import android.location.Location;
 import com.lowbottgames.gpslogger.db.DaoMaster;
 import com.lowbottgames.gpslogger.db.DaoSession;
 import com.lowbottgames.gpslogger.db.GPSData;
-import com.lowbottgames.gpslogger.db.GPSDataDao;
 
 import java.util.List;
 
-/**
- * Created by dean on 08/10/16.
- */
 public class GLDbHelper {
     public static SQLiteDatabase getWritableDatabase(Context context){
         return getHelper(context).getWritableDatabase();
@@ -79,7 +75,6 @@ public class GLDbHelper {
         gpsData.setBearing(location.getBearing());
         gpsData.setSpeed(location.getSpeed());
         gpsData.setAltitude(location.getAltitude());
-//        gpsData.setElapsedrealtimenanos(location.getElapsedRealtimeNanos());
 
         return gpsData;
     }

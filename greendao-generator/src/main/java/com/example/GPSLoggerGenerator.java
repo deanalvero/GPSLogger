@@ -34,8 +34,5 @@ public class GPSLoggerGenerator {
         gpsData.addFloatProperty("bearing");
         gpsData.addFloatProperty("speed");
         gpsData.addDoubleProperty("altitude");
-//        gpsData.addLongProperty("elapsedrealtimenanos");
-
-
     }
 }

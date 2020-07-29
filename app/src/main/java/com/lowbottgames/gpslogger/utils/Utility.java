@@ -3,9 +3,6 @@ package com.lowbottgames.gpslogger.utils;
 import android.app.ActivityManager;
 import android.content.Context;
 
-/**
- * Created by dean on 08/09/16.
- */
 public class Utility {
 
     public static boolean isServiceRunning(Context context, Class<?> serviceClass) {

@@ -7,14 +7,12 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.util.Log;
+
+import androidx.annotation.Nullable;
 
 import com.lowbottgames.gpslogger.receiver.GLBroadcastReceiver;
 
-/**
- * Created by dean on 08/09/16.
- */
 public class GLLocationService extends Service {
 
     private static final String TAG = GLLocationService.class.getSimpleName();

@@ -11,9 +11,6 @@ import com.lowbottgames.gpslogger.utils.GLDbHelper;
 
 import org.greenrobot.eventbus.EventBus;
 
-/**
- * Created by dean on 08/09/16.
- */
 public class GLBroadcastReceiver extends BroadcastReceiver {
 
     public static final String EXTRA_LOCATION = "LOCATION";

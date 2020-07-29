@@ -1,11 +1,12 @@
 package com.lowbottgames.gpslogger.adapter;
 
-import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.lowbottgames.gpslogger.R;
 import com.lowbottgames.gpslogger.db.GPSData;
@@ -13,9 +14,6 @@ import com.lowbottgames.gpslogger.db.GPSData;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by dean on 31/05/16.
- */
 public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<GPSData> mItemList;
