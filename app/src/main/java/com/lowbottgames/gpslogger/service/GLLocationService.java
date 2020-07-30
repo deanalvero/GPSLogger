@@ -16,7 +16,7 @@ import com.lowbottgames.gpslogger.receiver.GLBroadcastReceiver;
 public class GLLocationService extends Service {
 
     private static final String TAG = GLLocationService.class.getSimpleName();
-    private LocationManager mLocationManager;
+    private LocationManager locationManager;
     private static final long LOCATION_INTERVAL = 1000;
     private static final float LOCATION_DISTANCE = Float.MIN_VALUE; //10f;
 
@@ -28,18 +28,17 @@ public class GLLocationService extends Service {
 
     private class GLLocationListener implements LocationListener {
 
-        Location mLastLocation;
+        Location lastLocation;
 
         public GLLocationListener(String s){
             Log.e(TAG, "GLLocationListener " + s);
-            mLastLocation = new Location(s);
+            lastLocation = new Location(s);
         }
-
 
         @Override
         public void onLocationChanged(Location location) {
             Log.e(TAG, "onLocationChanged: " + location);
-            mLastLocation.set(location);
+            lastLocation.set(location);
 
             Intent intent = new Intent();
             intent.setAction("com.lowbottgames.gpslogger.LOCATION_CHANGED");
@@ -59,12 +58,11 @@ public class GLLocationService extends Service {
 
         @Override
         public void onProviderDisabled(String s) {
-
             Log.e(TAG, "onProviderDisabled: " + s);
         }
     }
 
-    LocationListener[] mLocationListeners = new LocationListener[]{
+    LocationListener[] locationListeners = new LocationListener[]{
             new GLLocationListener(LocationManager.GPS_PROVIDER),
             new GLLocationListener(LocationManager.NETWORK_PROVIDER)
     };
@@ -72,29 +70,22 @@ public class GLLocationService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.e(TAG, "onStartCommand()");
-
-//        return super.onStartCommand(intent, flags, startId);
-
-
-//        return START_NOT_STICKY;
         return START_STICKY;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-
         Log.e(TAG, "onCreate");
 
-
         try {
-            getLocationManager().requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, mLocationListeners[0]);
+            getLocationManager().requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, locationListeners[0]);
         } catch (Exception e){
             Log.e(TAG, "e requestLocationUpdates 0");
         }
 
         try {
-            getLocationManager().requestLocationUpdates(LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, mLocationListeners[1]);
+            getLocationManager().requestLocationUpdates(LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, locationListeners[1]);
         } catch (Exception e){
             Log.e(TAG, "e requestLocationUpdates 1");
         }
@@ -105,11 +96,11 @@ public class GLLocationService extends Service {
         Log.e(TAG, "onDestroy");
 
         if (getLocationManager() != null){
-            int lengthLocationListeners = mLocationListeners.length;
+            int lengthLocationListeners = locationListeners.length;
 
             for (int i = 0; i < lengthLocationListeners; i++){
                 try {
-                    getLocationManager().removeUpdates(mLocationListeners[i]);
+                    getLocationManager().removeUpdates(locationListeners[i]);
                 } catch (Exception e){
                     Log.e(TAG, "e removeUpdates " + i);
                 }
@@ -119,9 +110,9 @@ public class GLLocationService extends Service {
     }
 
     private LocationManager getLocationManager(){
-        if (mLocationManager == null){
-            mLocationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
+        if (locationManager == null){
+            locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
         }
-        return mLocationManager;
+        return locationManager;
     }
 }

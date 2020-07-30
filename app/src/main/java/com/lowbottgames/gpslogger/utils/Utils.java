@@ -3,7 +3,7 @@ package com.lowbottgames.gpslogger.utils;
 import android.app.ActivityManager;
 import android.content.Context;
 
-public class Utility {
+public class Utils {
 
     public static boolean isServiceRunning(Context context, Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);

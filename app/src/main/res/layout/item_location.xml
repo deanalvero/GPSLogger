@@ -5,19 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="8dp"
-    android:layout_marginRight="8dp"
     android:layout_marginTop="4dp"
+    android:layout_marginRight="8dp"
     android:layout_marginBottom="4dp"
     android:background="?selectableItemBackground">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
+        android:orientation="vertical"
         android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+        android:paddingTop="8dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="8dp">
 
         <TextView
             android:id="@+id/textView_coordinates"

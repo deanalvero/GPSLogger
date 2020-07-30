@@ -6,33 +6,34 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lowbottgames.gpslogger.R;
-import com.lowbottgames.gpslogger.db.GPSData;
+import com.lowbottgames.gpslogger.database.LocationInfo;
 
 import java.util.Date;
 import java.util.List;
 
 public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<GPSData> mItemList;
-    private LocationRecyclerViewAdapterListener mListener;
+    private List<LocationInfo> items;
+    private LocationRecyclerViewAdapterListener listener;
 
     public LocationRecyclerViewAdapter(){
     }
 
     public interface LocationRecyclerViewAdapterListener {
-        void onClickGPSDataItem(GPSData itemObject);
+        void onClickLocationInfo(LocationInfo itemObject);
     }
 
-    public void setItemList(List<GPSData> itemList){
-        this.mItemList = itemList;
+    public void setItemList(List<LocationInfo> items){
+        this.items = items;
         notifyDataSetChanged();
     }
 
     public void setLocationRecyclerViewAdapterListener(LocationRecyclerViewAdapterListener listener){
-        this.mListener = listener;
+        this.listener = listener;
     }
 
     @Override
@@ -42,10 +43,10 @@ public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
         DLocationViewHolder viewHolder = (DLocationViewHolder) holder;
 
-        final GPSData item = mItemList.get(position);
+        LocationInfo item = items.get(position);
 
         viewHolder.textViewTime.setText(DateFormat.format("MM/dd/yyyy hh:mm:ss a", new Date(item.getTime())).toString());
         viewHolder.textViewCoordinates.setText(String.format("%f, %f", item.getLatitude(), item.getLongitude()));
@@ -54,8 +55,8 @@ public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         viewHolder.listener = new DLocationViewHolder.DLocationViewHolderListener() {
             @Override
             public void onClickItem() {
-                if (LocationRecyclerViewAdapter.this.mListener != null){
-                    LocationRecyclerViewAdapter.this.mListener.onClickGPSDataItem(item);
+                if (LocationRecyclerViewAdapter.this.listener != null){
+                    LocationRecyclerViewAdapter.this.listener.onClickLocationInfo(items.get(holder.getAdapterPosition()));
                 }
             }
         };
@@ -63,8 +64,8 @@ public class LocationRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public int getItemCount() {
-        if (mItemList == null) return 0;
-        return mItemList.size();
+        if (items == null) return 0;
+        return items.size();
     }
 
     public static class DLocationViewHolder extends RecyclerView.ViewHolder {

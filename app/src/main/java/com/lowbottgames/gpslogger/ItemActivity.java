@@ -7,14 +7,13 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.lowbottgames.gpslogger.db.GPSData;
+import com.lowbottgames.gpslogger.database.LocationInfo;
 
 public class ItemActivity extends AppCompatActivity {
-
-    private Toolbar mToolbar;
 
     private TextView textView_id;
     private TextView textView_time;
@@ -40,30 +39,8 @@ public class ItemActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item);
-        setupOnCreate();
 
-        loadData();
-    }
-
-
-    public static Intent newItemActivityIntent(Context context, GPSData gpsData){
-        Intent intent = new Intent(context, ItemActivity.class);
-
-        intent.putExtra(EXTRA_ID, gpsData.getId());
-        intent.putExtra(EXTRA_TIME, gpsData.getTime());
-        intent.putExtra(EXTRA_LATITUDE, gpsData.getLatitude());
-        intent.putExtra(EXTRA_LONGITUDE, gpsData.getLongitude());
-        intent.putExtra(EXTRA_PROVIDER, gpsData.getProvider());
-        intent.putExtra(EXTRA_ACCURACY, gpsData.getAccuracy());
-        intent.putExtra(EXTRA_BEARING, gpsData.getBearing());
-        intent.putExtra(EXTRA_SPEED, gpsData.getSpeed());
-        intent.putExtra(EXTRA_ALTITUDE, gpsData.getAltitude());
-
-        return intent;
-    }
-
-    private void setupOnCreate() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         textView_id = (TextView) findViewById(R.id.textView_id);
         textView_time = (TextView) findViewById(R.id.textView_time);
@@ -75,9 +52,31 @@ public class ItemActivity extends AppCompatActivity {
         textView_speed = (TextView) findViewById(R.id.textView_speed);
         textView_altitude = (TextView) findViewById(R.id.textView_altitude);
 
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle(R.string.title_item);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(R.string.title_item);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        loadData();
+    }
+
+
+    public static Intent newItemActivityIntent(Context context, LocationInfo locationInfo){
+        Intent intent = new Intent(context, ItemActivity.class);
+
+        intent.putExtra(EXTRA_ID, locationInfo.getId());
+        intent.putExtra(EXTRA_TIME, locationInfo.getTime());
+        intent.putExtra(EXTRA_LATITUDE, locationInfo.getLatitude());
+        intent.putExtra(EXTRA_LONGITUDE, locationInfo.getLongitude());
+        intent.putExtra(EXTRA_PROVIDER, locationInfo.getProvider());
+        intent.putExtra(EXTRA_ACCURACY, locationInfo.getAccuracy());
+        intent.putExtra(EXTRA_BEARING, locationInfo.getBearing());
+        intent.putExtra(EXTRA_SPEED, locationInfo.getSpeed());
+        intent.putExtra(EXTRA_ALTITUDE, locationInfo.getAltitude());
+
+        return intent;
     }
 
     private void loadData() {

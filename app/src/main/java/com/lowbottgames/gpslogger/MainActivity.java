@@ -8,76 +8,59 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.lowbottgames.gpslogger.adapter.LocationRecyclerViewAdapter;
-import com.lowbottgames.gpslogger.db.GPSData;
-import com.lowbottgames.gpslogger.event.LocationEvent;
+import com.lowbottgames.gpslogger.database.LocationInfo;
 import com.lowbottgames.gpslogger.service.GLLocationService;
-import com.lowbottgames.gpslogger.utils.GLDbHelper;
-import com.lowbottgames.gpslogger.utils.Utility;
+import com.lowbottgames.gpslogger.utils.Utils;
+import com.lowbottgames.gpslogger.viewmodel.LocationInfoViewModel;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-
-import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements LocationRecyclerViewAdapter.LocationRecyclerViewAdapterListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private Toolbar mToolbar;
-    private FloatingActionButton mFloatingActionButton;
-
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-    private RecyclerView mRecyclerView;
-
-    private LocationRecyclerViewAdapter mLocationRecyclerViewAdapter;
+    private FloatingActionButton floatingActionButton;
+    private LocationRecyclerViewAdapter locationRecyclerViewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setupOnCreate();
-    }
 
-    private void refreshLocationList() {
-        List<GPSData> gpsDataList = GLDbHelper.loadAllGPSData(this);
-        Collections.reverse(gpsDataList);
-        getLocationRecyclerViewAdapter().setItemList(gpsDataList);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        mSwipeRefreshLayout.setRefreshing(false);
-    }
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.floatingActionButton);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
-    private void setupOnCreate() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.floatingActionButton);
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        locationRecyclerViewAdapter = new LocationRecyclerViewAdapter();
+        locationRecyclerViewAdapter.setLocationRecyclerViewAdapterListener(this);
 
-        setSupportActionBar(mToolbar);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(locationRecyclerViewAdapter);
 
-        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+        LocationInfoViewModel locationInfoViewModel = new ViewModelProvider(this).get(LocationInfoViewModel.class);
+        locationInfoViewModel.getLocationInfos().observe(this, new Observer<List<LocationInfo>>() {
+            @Override
+            public void onChanged(List<LocationInfo> locationInfos) {
+                locationRecyclerViewAdapter.setItemList(locationInfos);
+            }
+        });
+
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 clickedFloatingActionButton();
             }
         });
 
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setAdapter(getLocationRecyclerViewAdapter());
-
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mSwipeRefreshLayout.setRefreshing(true);
-                refreshLocationList();
-            }
-        });
     }
 
     private void clickedFloatingActionButton() {
@@ -91,48 +74,27 @@ public class MainActivity extends AppCompatActivity implements LocationRecyclerV
 
     private void refreshServiceStatus(){
         if (isServiceRunning()){
-            mFloatingActionButton.setImageResource(R.drawable.ic_stop_white_24dp);
-            mFloatingActionButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorStop)));
+            floatingActionButton.setImageResource(R.drawable.ic_stop_white_24dp);
+            floatingActionButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorStop)));
         } else {
-            mFloatingActionButton.setImageResource(R.drawable.ic_play_arrow_white_24dp);
-            mFloatingActionButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorPlay)));
+            floatingActionButton.setImageResource(R.drawable.ic_play_arrow_white_24dp);
+            floatingActionButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorPlay)));
         }
     }
 
     private boolean isServiceRunning(){
-        return Utility.isServiceRunning(this, GLLocationService.class);
-    }
-
-    private LocationRecyclerViewAdapter getLocationRecyclerViewAdapter(){
-        if (this.mLocationRecyclerViewAdapter == null){
-            this.mLocationRecyclerViewAdapter = new LocationRecyclerViewAdapter();
-            this.mLocationRecyclerViewAdapter.setLocationRecyclerViewAdapterListener(this);
-        }
-        return this.mLocationRecyclerViewAdapter;
+        return Utils.isServiceRunning(this, GLLocationService.class);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        EventBus.getDefault().register(this);
-
         refreshServiceStatus();
-        refreshLocationList();
     }
 
     @Override
-    protected void onPause() {
-        EventBus.getDefault().unregister(this);
-        super.onPause();
-    }
-
-    @Subscribe
-    public void onEvent(LocationEvent event){
-        refreshLocationList();
-    }
-
-    @Override
-    public void onClickGPSDataItem(GPSData itemObject) {
+    public void onClickLocationInfo(LocationInfo itemObject) {
         startActivity(ItemActivity.newItemActivityIntent(this, itemObject));
     }
+
 }

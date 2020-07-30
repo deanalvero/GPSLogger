@@ -14,38 +14,31 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:layout_scrollFlags="scroll|enterAlways" />
+            app:layout_scrollFlags="scroll|snap"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefreshLayout"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingBottom="64dp"
-            android:clipToPadding="false" />
-
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        android:clipToPadding="false"
+        android:paddingBottom="64dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="8dp"
+        android:layout_gravity="end|bottom"
         android:layout_marginEnd="16dp"
+        android:layout_marginRight="8dp"
         android:layout_marginBottom="16dp"
         android:src="@drawable/ic_play_arrow_white_24dp"
-        app:fabSize="normal"
         app:borderWidth="0dp"
+        app:fabSize="normal"
         app:layout_anchorGravity="bottom|right|end"
-        android:layout_gravity="end|bottom"
         />
 
     <!-- app:layout_anchor="@id/appBarLayout"
