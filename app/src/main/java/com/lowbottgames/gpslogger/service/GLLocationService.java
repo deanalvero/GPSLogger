@@ -1,7 +1,9 @@
 package com.lowbottgames.gpslogger.service;
 
+import android.Manifest;
 import android.app.Service;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -10,6 +12,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 
 import com.lowbottgames.gpslogger.receiver.GLBroadcastReceiver;
 
@@ -30,7 +33,7 @@ public class GLLocationService extends Service {
 
         Location lastLocation;
 
-        public GLLocationListener(String s){
+        public GLLocationListener(String s) {
             Log.e(TAG, "GLLocationListener " + s);
             lastLocation = new Location(s);
         }
@@ -78,17 +81,13 @@ public class GLLocationService extends Service {
         super.onCreate();
         Log.e(TAG, "onCreate");
 
-        try {
-            getLocationManager().requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, locationListeners[0]);
-        } catch (Exception e){
-            Log.e(TAG, "e requestLocationUpdates 0");
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
         }
 
-        try {
-            getLocationManager().requestLocationUpdates(LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, locationListeners[1]);
-        } catch (Exception e){
-            Log.e(TAG, "e requestLocationUpdates 1");
-        }
+        LocationManager locationManager = getLocationManager();
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, locationListeners[0]);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, locationListeners[1]);
     }
 
     @Override

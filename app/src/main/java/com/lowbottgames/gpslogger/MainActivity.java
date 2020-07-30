@@ -1,12 +1,15 @@
 package com.lowbottgames.gpslogger;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -25,6 +28,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements LocationRecyclerViewAdapter.LocationRecyclerViewAdapterListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static final int REQUEST_CODE_PERMISSION_LOCATION = 10;
 
     private FloatingActionButton floatingActionButton;
     private LocationRecyclerViewAdapter locationRecyclerViewAdapter;
@@ -61,6 +65,16 @@ public class MainActivity extends AppCompatActivity implements LocationRecyclerV
             }
         });
 
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[] {
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION
+                    },
+                    REQUEST_CODE_PERMISSION_LOCATION
+            );
+        }
     }
 
     private void clickedFloatingActionButton() {
